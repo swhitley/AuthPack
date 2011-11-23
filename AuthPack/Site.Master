@@ -1,0 +1,153 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.master.cs" Inherits="AuthPack.SiteMaster" %>
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head runat="server">
+    <title></title>
+    <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
+    <asp:ContentPlaceHolder ID="HeadContent" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form runat="server">
+    <div class="page">
+        <div class="header">
+            <div class="title">
+                <h1>
+                    My ASP.NET Application
+                </h1>
+            </div>
+            <div class="loginDisplay">
+                <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
+                    <AnonymousTemplate>
+                        <!-- TODO: Move this into a stylesheet. -->
+                        <style type="text/css">
+                            .horizontal-list
+                            {
+                                float:right;
+                            }
+                            .horizontal-list li
+                            {
+                                float:left;
+                                list-style-type: none;
+                                padding-right: 20px;
+                            }
+                        </style>
+                        <!-- AuthPack Buttons -->
+                        <ul class="horizontal-list">
+                        <li>
+                        <!-- Twitter Login -->
+                            <div id="twitter_login"></div>
+                        <!-- End Twitter Login -->
+                        </li>
+                        <li>
+                        <!-- Facebook Login -->
+                            <fb:login-button id="fblogin" onlogin="location.href='auth/auth.aspx?facebookauth=false'" perms="">Login with Facebook</fb:login-button>
+                        <!-- End Facebook Login -->
+                        </li>
+                        <li>
+                        <!-- Google Login -->
+                            <div id="google_login"></div>
+                        <!-- End Google Login -->
+                        </li>
+                        <li>
+                        <!-- LinkedIn Login -->
+                            <script type="in/login" data-onAuth="onLinkedInAuth"><a href="#" onclick="location.reload();">Reload Page</a></script>
+                        <!-- End LinkedIn Login -->
+                        </li>
+                        </ul>
+                        <!-- End AuthPack Buttons -->
+                    </AnonymousTemplate>
+                    <LoggedInTemplate>
+                        Welcome <span class="bold"><asp:LoginName ID="HeadLoginName" runat="server" /></span>!
+                        [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out" LogoutPageUrl="~/"/> ]
+                    </LoggedInTemplate>
+                </asp:LoginView>
+            </div>
+            <div class="clear hideSkiplink">
+                <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
+                    <Items>
+                        <asp:MenuItem NavigateUrl="~/Default.aspx" Text="Home"/>
+                        <asp:MenuItem NavigateUrl="~/About.aspx" Text="About"/>
+                    </Items>
+                </asp:Menu>
+            </div>
+        </div>
+        <div class="main">
+            <asp:ContentPlaceHolder ID="MainContent" runat="server"/>
+        </div>
+        <div class="clear">
+        </div>
+    </div>
+    <div class="footer">
+    </div>
+
+    <!-- AuthPack Javascript -->
+    <!-- jQuery -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <!-- Facebook -->
+    <div id="fb-root"></div>
+    <!-- LinkedIn -->
+    <script type="text/javascript" src="http://platform.linkedin.com/in.js">
+        api_key: <%= ConfigurationManager.AppSettings["linkedin_consumer_key"].ToString() %>
+        authorize: false
+        credentials_cookie: true
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //Twitter Login Button
+            if (document.getElementById("twitter_login")) {
+                var button = document.createElement("button");
+                button.id = "twitter_login_button";
+                button.setAttribute("style", "background:none;border:none;cursor:pointer;padding:0;");
+                button.onclick = function () { window.open("/auth/auth.aspx?twitterauth=true", "TwitterLoginWindow", "width=800,height=700,left=150,top=100,scrollbar=no,resize=no"); return false; };
+                button.innerHTML = "<img src='/images/twitter_signin.png' style='margin:0;'>";
+                document.getElementById("twitter_login").appendChild(button);
+            }
+            //End Twitter
+            //Google Login Button
+            if (document.getElementById("google_login")) {
+                var button = document.createElement("button");
+                button.id = "google_button";
+                button.setAttribute("style", "background:none;border:none;cursor:pointer;padding:0;");
+                button.onclick = function () { window.open("/auth/auth.aspx?googleauth=true", "GoogleLoginWindow", "width=800,height=400,left=150,top=100,scrollbar=no,resize=no"); return false; };
+                button.innerHTML = "<img src='/images/google-signin.png' style='margin:0;'>";
+                document.getElementById("google_login").appendChild(button);
+            }
+            //End Google
+        });
+
+        //Facebook Login Button
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: "<%= ConfigurationManager.AppSettings["facebook_appid"].ToString() %>",
+                status: false, // check login status
+                cookie: true, // enable cookies to allow the server to access the session
+                xfbml: true  // parse XFBML
+            });
+            $("fblogin").show();
+        };
+        (function () {
+            var e = document.createElement('script'); e.async = true;
+            e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+            document.getElementById('fb-root').appendChild(e);
+        } ());
+        //End Facebook
+
+        //LinkedIn Auth Event
+        function onLinkedInAuth() {
+            $.ajax({
+                //SSL Only
+                url: "https://" + document.domain + "/auth/auth.aspx",
+                dataType: 'jsonp',
+                complete: function () {
+                    location.reload();
+                }
+            });
+        }
+        //End LinkedIn
+    </script>
+    <!-- End AuthPack Javascript -->
+    </form>
+</body>
+</html>
