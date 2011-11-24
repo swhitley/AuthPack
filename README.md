@@ -28,8 +28,11 @@ oAuth Setup
 Register your application with the service providers and retrieve the necesseary API keys.  Then enter them in web.config.
 
 Twitter - https://dev.twitter.com/apps/new
+
 Facebook - http://developers.facebook.com/docs/guides/web/
+
 Google - https://code.google.com/apis/console/
+
 LinkedIn - https://www.linkedin.com/secure/developer
 
 
