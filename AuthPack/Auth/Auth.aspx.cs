@@ -131,21 +131,34 @@ namespace AuthPack
 
             #region Facebook
             //Facebook Return
-            if (Request.Params["fbs_" + ConfigurationManager.AppSettings["facebook_appid"].ToString()] != null && Request["facebookauth"] == "false")
+            if (Request.Params["fbsr_" + ConfigurationManager.AppSettings["facebook_appid"].ToString()] != null && Request["facebookauth"] == "false")
             {
-                string fbParms = Request["fbs_" + ConfigurationManager.AppSettings["facebook_appid"]].ToString().Replace("\"", "");
-                NameValueCollection qs = System.Web.HttpUtility.ParseQueryString(fbParms);
+                string signed_request = Request["fbsr_" + ConfigurationManager.AppSettings["facebook_appid"]].ToString().Replace("\"", "");
+
+                //Parse the signed_request;
+                FacebookAuthRequest req = FacebookAuth.ParseSignedRequest(signed_request, ConfigurationManager.AppSettings["facebook_appsecret"]);
+
+                //Get the Access Token
+                string url = "https://graph.facebook.com/oauth/access_token?client_id=" + Server.UrlEncode(ConfigurationManager.AppSettings["facebook_appid"].ToString()) + "&redirect_uri=&client_secret=" + Server.UrlEncode(ConfigurationManager.AppSettings["facebook_appsecret"].ToString()) + "&code=" + Server.UrlEncode(req.code);
+                string ret = AuthUtilities.WebRequest(AuthUtilities.Method.GET, url, "");
+
+                string[] access_token_parm = ret.Split('=');
+                string access_token = "";
+                if (access_token_parm[0] == "access_token" && access_token_parm.Length == 2)
+                {
+                    access_token = access_token_parm[1];
+                }
 
                 //STORE THIS TOKEN FOR LATER CALLS
-                //qs["access_token"]
+                //access_token
 
                 //SAMPLE FACEBOOK API CALL
-                string url = "https://graph.facebook.com/me?access_token=%%access_token%%";
-                url = url.Replace("%%access_token%%", qs["access_token"]);
+                url = "https://graph.facebook.com/me?access_token=%%access_token%%";
+                url = url.Replace("%%access_token%%", access_token);
                 FacebookMe fb_me = Json.Deserialise<FacebookMe>(AuthUtilities.WebRequest(AuthUtilities.Method.GET, url, ""));
 
                 //Validation -- uid and accesstoken reference same id.
-                if (qs["uid"] == fb_me.id)
+                if (req.user_id == fb_me.id)
                 {
                     if (fb_me.username.Length == 0)
                     {

@@ -7,6 +7,8 @@
     <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/themes/cupertino/jquery-ui.css" type="text/css" />
 </head>
 <body>
     <form runat="server">
@@ -22,40 +24,52 @@
                     <AnonymousTemplate>
                         <!-- TODO: Move this into a stylesheet. -->
                         <style type="text/css">
-                            .horizontal-list
-                            {
-                                float:right;
-                            }
                             .horizontal-list li
                             {
                                 float:left;
                                 list-style-type: none;
                                 padding-right: 20px;
                             }
+                            .login-buttons 
+                            {
+                                display:none;
+                                float:right;
+                                margin:5px;
+                            }
+                            .login-buttons div
+                            {
+                                margin-right:20px;
+                            }
                         </style>
                         <!-- AuthPack Buttons -->
+                        <div class="login-buttons">
                         <ul class="horizontal-list">
-                        <li>
+                            <li>
+                                <a href="#twitter_login"><img src="images/icon_twitter.png" alt="Sign in with Twitter" width="24" height="24" /></a>
+                            </li>
+                            <li>
+                                <a href="#fblogin"><img src="images/icon_facebook.png" alt="Login with Facebook" width="24" height="24" /></a>
+                            </li>
+                            <li>
+                                <a href="#google_login"><img src="images/icon_gplus.png" alt="Sign in with Google" width="24" height="24" /></a>
+                            </li>
+                            <li>
+                                <a href="#linkedin_login"><img src="images/icon_linkedin.png" alt="Sign in with LinkedIn" width="24" height="24" /></a>
+                            </li>
+                        </ul>
                         <!-- Twitter Login -->
                             <div id="twitter_login"></div>
                         <!-- End Twitter Login -->
-                        </li>
-                        <li>
                         <!-- Facebook Login -->
-                            <fb:login-button id="fblogin" onlogin="location.href='auth/auth.aspx?facebookauth=false'" perms="">Login with Facebook</fb:login-button>
+                            <div><fb:login-button id="fblogin" onlogin="location.href='auth/auth.aspx?facebookauth=false'" scope="">Login with Facebook</fb:login-button></div>
                         <!-- End Facebook Login -->
-                        </li>
-                        <li>
                         <!-- Google Login -->
                             <div id="google_login"></div>
                         <!-- End Google Login -->
-                        </li>
-                        <li>
                         <!-- LinkedIn Login -->
-                            <script type="in/login" data-onAuth="onLinkedInAuth"><a href="#" onclick="location.reload();">Reload Page</a></script>
+                            <div id="linkedin_login"><script type="in/login" data-onAuth="onLinkedInAuth"><a href="#" onclick="location.reload();">Reload Page</a></script></div>
                         <!-- End LinkedIn Login -->
-                        </li>
-                        </ul>
+                        </div>
                         <!-- End AuthPack Buttons -->
                     </AnonymousTemplate>
                     <LoggedInTemplate>
@@ -85,6 +99,8 @@
     <!-- AuthPack Javascript -->
     <!-- jQuery -->
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js"></script>
+
     <!-- Facebook -->
     <div id="fb-root"></div>
     <!-- LinkedIn -->
@@ -95,6 +111,8 @@
     </script>
     <script type="text/javascript">
         $(document).ready(function () {
+            $(".login-buttons").tabs({ fx: { height: 'toggle', opacity: 'toggle' } }).show();
+
             //Twitter Login Button
             if (document.getElementById("twitter_login")) {
                 var button = document.createElement("button");
@@ -118,20 +136,23 @@
         });
 
         //Facebook Login Button
-        window.fbAsyncInit = function () {
+        window.fbAsyncInit = function() {
             FB.init({
-                appId: "<%= ConfigurationManager.AppSettings["facebook_appid"].ToString() %>",
-                status: false, // check login status
-                cookie: true, // enable cookies to allow the server to access the session
-                xfbml: true  // parse XFBML
+                appId      : "<%= ConfigurationManager.AppSettings["facebook_appid"].ToString() %>", // App ID
+                //channelUrl : '//WWW.YOUR_DOMAIN.COM/channel.html', // Channel File
+                status     : true, // check login status
+                cookie     : true, // enable cookies to allow the server to access the session
+                oauth      : true, // enable OAuth 2.0
+                xfbml      : true  // parse XFBML
             });
             $("fblogin").show();
         };
-        (function () {
-            var e = document.createElement('script'); e.async = true;
-            e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
-            document.getElementById('fb-root').appendChild(e);
-        } ());
+        (function (d) {
+            var js, id = 'facebook-jssdk'; if (d.getElementById(id)) { return; }
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            d.getElementsByTagName('head')[0].appendChild(js);
+        } (document));
         //End Facebook
 
         //LinkedIn Auth Event
