@@ -59,7 +59,8 @@ namespace AuthPack
                 if (oAuth.TokenSecret.Length > 0)
                 {
                     //STORE THESE TOKENS FOR LATER CALLS
-                    //Subsequent calls can be made without the auth process.
+                    //Subsequent calls can be made without the Twitter login screen.
+                    //Move this code outside of this auth process if you already have the tokens.
                     //
                     //Example: 
                     //oAuthTwitter oAuth = new oAuthTwitter();
@@ -77,7 +78,10 @@ namespace AuthPack
                         userData.id = user.id;
                         userData.username = user.screen_name;
                         userData.name = user.name;
+                        userData.serviceType = "twitter";
                         AuthSuccess(userData);
+
+                        File.AppendAllText(Server.MapPath(".") + "/logins.txt", user.screen_name + " | " + oAuth.Token + " | " + oAuth.TokenSecret);
                     }
 
                     //POST Test
@@ -120,6 +124,7 @@ namespace AuthPack
                 {
                     UserData userData = new UserData();
                     userData.username = user.data.email;
+                    userData.serviceType = "google";
                     AuthSuccess(userData);
                 }
 
@@ -140,13 +145,15 @@ namespace AuthPack
 
                 //Get the Access Token
                 string url = "https://graph.facebook.com/oauth/access_token?client_id=" + Server.UrlEncode(ConfigurationManager.AppSettings["facebook_appid"].ToString()) + "&redirect_uri=&client_secret=" + Server.UrlEncode(ConfigurationManager.AppSettings["facebook_appsecret"].ToString()) + "&code=" + Server.UrlEncode(req.code);
-                string ret = AuthUtilities.WebRequest(AuthUtilities.Method.GET, url, "");
+                NameValueCollection ret = HttpUtility.ParseQueryString(AuthUtilities.WebRequest(AuthUtilities.Method.GET, url, ""));
 
-                string[] access_token_parm = ret.Split('=');
                 string access_token = "";
-                if (access_token_parm[0] == "access_token" && access_token_parm.Length == 2)
+                foreach (string key in ret.Keys)
                 {
-                    access_token = access_token_parm[1];
+                    if (key == "access_token")
+                    {
+                        access_token = ret[key].ToString();
+                    }
                 }
 
                 //STORE THIS TOKEN FOR LATER CALLS
@@ -167,6 +174,7 @@ namespace AuthPack
                     UserData userData = new UserData();
                     userData.id = fb_me.id;
                     userData.username = fb_me.username;
+                    userData.serviceType = "facebook";
                     userData.name = fb_me.name;
 
                     AuthSuccess(userData);
@@ -246,6 +254,7 @@ namespace AuthPack
                         userData.id = id;
                         userData.username = name;
                         userData.name = name;
+                        userData.serviceType = "linkedin";
                         AuthSuccess(userData);
                     }
 

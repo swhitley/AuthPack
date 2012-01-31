@@ -62,14 +62,16 @@
     <Content Include="Images\icon_facebook.png" />
     <Content Include="Images\icon_gplus.png" />
     <Content Include="Images\icon_linkedin.png" />
-    <Content Include="Images\icon_twitter.jpg" />
+    <Content Include="Images\icon_twitter.png" />
     <Content Include="Images\twitter_signin.png" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
-    <None Include="Web.config" />
+    <None Include="Web.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">
@@ -147,16 +149,8 @@
     <Content Include="Site.Master" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NoGit\Web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NoGit\Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="NoGit\Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
+    <Content Include="NoGit\Web.config">
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

@@ -73,7 +73,7 @@
                         <!-- End AuthPack Buttons -->
                     </AnonymousTemplate>
                     <LoggedInTemplate>
-                        Welcome <span class="bold"><asp:LoginName ID="HeadLoginName" runat="server" /></span>!
+                        <p>Welcome <span class="bold"><asp:LoginName ID="HeadLoginName" runat="server" /></span>! <asp:Image id="profileImage" Width="32" Height="32" ImageUrl="" AlternateText="" style="margin-left:5px;float:right;" runat="server" Visible="false" /></p>
                         [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out" LogoutPageUrl="~/"/> ]
                     </LoggedInTemplate>
                 </asp:LoginView>
@@ -119,7 +119,7 @@
                 button.id = "twitter_login_button";
                 button.setAttribute("style", "background:none;border:none;cursor:pointer;padding:0;");
                 button.onclick = function () { window.open("/auth/auth.aspx?twitterauth=true", "TwitterLoginWindow", "width=800,height=700,left=150,top=100,scrollbar=no,resize=no"); return false; };
-                button.innerHTML = "<img src='/images/twitter_signin.png' style='margin:0;'>";
+                button.innerHTML = "<img src='images/twitter_signin.png' style='margin:0;'>";
                 document.getElementById("twitter_login").appendChild(button);
             }
             //End Twitter
@@ -129,7 +129,7 @@
                 button.id = "google_button";
                 button.setAttribute("style", "background:none;border:none;cursor:pointer;padding:0;");
                 button.onclick = function () { window.open("/auth/auth.aspx?googleauth=true", "GoogleLoginWindow", "width=800,height=400,left=150,top=100,scrollbar=no,resize=no"); return false; };
-                button.innerHTML = "<img src='/images/google-signin.png' style='margin:0;'>";
+                button.innerHTML = "<img src='images/google-signin.png' style='margin:0;'>";
                 document.getElementById("google_login").appendChild(button);
             }
             //End Google

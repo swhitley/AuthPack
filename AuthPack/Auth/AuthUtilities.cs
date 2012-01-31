@@ -157,5 +157,7 @@ namespace AuthPack
         public string username;
         [DataMember]
         public string name;
+        [DataMember]
+        public string serviceType;
     }
 }
