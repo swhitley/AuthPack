@@ -89,7 +89,7 @@ namespace AuthPack
                     //xml = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, url, "status=" + oAuth.UrlEncode("Hello @swhitley - Testing the .NET oAuth API"));
                     //apiResponse.InnerHtml = Server.HtmlEncode(xml);
                     Response.Clear();
-                    Response.Write("<script type='text/javascript'>window.opener.location.href = '/';window.close();</script>");
+                    Response.Write("<script>window.opener.location.reload();window.close();</script>");
 
                 }
             }
@@ -129,7 +129,7 @@ namespace AuthPack
                 }
 
                 Response.Clear();
-                Response.Write("<script type='text/javascript'>window.opener.location.href = '/';window.close();</script>");
+                Response.Write("<script>window.opener.location.reload();window.close();</script>");
 
             }
             #endregion
@@ -179,11 +179,13 @@ namespace AuthPack
 
                     AuthSuccess(userData);
                 }
-                Response.Redirect("/");
+                Response.Clear();
+                Response.Write("<script>location.href = '../';</script>");
             }
             if (Request["facebookauth"] == "false" && !User.Identity.IsAuthenticated)
             {
-                Response.Redirect("/");
+                Response.Clear();
+                Response.Write("<script>location.href = '../';</script>");
             }
             #endregion
 
