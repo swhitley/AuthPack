@@ -38,7 +38,8 @@
                             }
                             .login-buttons div
                             {
-                                margin-right:20px;
+                                width: 50%;
+                                margin: 0px auto;
                             }
                         </style>
                         <!-- AuthPack Buttons -->
@@ -56,6 +57,9 @@
                             <li>
                                 <a href="#linkedin_login"><img src="images/icon_linkedin.png" alt="Sign in with LinkedIn" width="24" height="24" /></a>
                             </li>
+                            <li>
+                                <a href="#appdotnet_connect"><img src="images/icon_appdotnet.png" alt="Connect with App.net" width="24" height="24" /></a>
+                            </li>
                         </ul>
                         <!-- Twitter Login -->
                             <div id="twitter_login"></div>
@@ -68,6 +72,9 @@
                         <!-- End Google Login -->
                         <!-- LinkedIn Login -->
                             <div id="linkedin_login"><script type="in/login" data-onAuth="onLinkedInAuth"><a href="#" onclick="location.reload();">Reload Page</a></script></div>
+                        <!-- End LinkedIn Login -->
+                        <!-- AppDotNet Connect -->
+                            <div id="appdotnet_connect"></div>
                         <!-- End LinkedIn Login -->
                         </div>
                         <!-- End AuthPack Buttons -->
@@ -133,6 +140,16 @@
                 document.getElementById("google_login").appendChild(button);
             }
             //End Google
+            //App.net Connect Button
+            if (document.getElementById("appdotnet_connect")) {
+                var button = document.createElement("button");
+                button.id = "appdotnet_connect_button";
+                button.setAttribute("style", "background:none;border:none;cursor:pointer;padding:0;");
+                button.onclick = function () { window.open("/auth/auth.aspx?appdotnetauth=true", "AppDotNetConnectWindow", "width=800,height=700,left=150,top=100,scrollbar=no,resize=no"); return false; };
+                button.innerHTML = "<img src='images/appdotnet-connect.png' style='margin:0;'>";
+                document.getElementById("appdotnet_connect").appendChild(button);
+            }
+            //End App.net
         });
 
         //Facebook Login Button
@@ -167,6 +184,7 @@
             });
         }
         //End LinkedIn
+
     </script>
     <!-- End AuthPack Javascript -->
     </form>

@@ -80,14 +80,11 @@ namespace AuthPack
                         userData.name = user.name;
                         userData.serviceType = "twitter";
                         AuthSuccess(userData);
-
-                        File.AppendAllText(Server.MapPath(".") + "/logins.txt", user.screen_name + " | " + oAuth.Token + " | " + oAuth.TokenSecret);
                     }
 
                     //POST Test
                     //url = "http://api.twitter.com/1/statuses/update.xml";
                     //xml = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, url, "status=" + oAuth.UrlEncode("Hello @swhitley - Testing the .NET oAuth API"));
-                    //apiResponse.InnerHtml = Server.HtmlEncode(xml);
                     Response.Clear();
                     Response.Write("<script>window.opener.location.reload();window.close();</script>");
 
@@ -265,6 +262,71 @@ namespace AuthPack
                 }
             }
             #endregion
+
+            #region Auth.Net
+            //App.net oAuth Start
+            if (Request["appdotnetauth"] != null && Request["appdotnetauth"] == "true")
+            {
+                //TODO: Customize this list for your needs.
+                string scope = (
+                      AppDotNetAuth.Scope.stream 
+                    | AppDotNetAuth.Scope.follow 
+                    | AppDotNetAuth.Scope.write_post
+                    | AppDotNetAuth.Scope.messages
+                    | AppDotNetAuth.Scope.export
+                    ).ToString().Replace(",","");
+
+                //Redirect the user to App.net for authorization.
+                Response.Redirect(AppDotNetAuth.AuthorizationLinkGet(scope,Request.Url.AbsoluteUri.Replace("appdotnetauth=true","appdotnetauth=false")));
+            }
+            //App.net Return
+            if (Request["appdotnetauth"] != null && Request["appdotnetauth"] == "false")
+            {
+                if (Request["code"] != null && Request["state"] != null)
+                {
+                    AppDotNetAuth oAuth = new AppDotNetAuth();
+                    
+                    //Get the access token.
+                    oAuth.TokenGet(Request["code"].ToString(), Request["state"].ToString());
+
+                    if (oAuth.access_token.Length > 0)
+                    {
+                        //STORE THE ACCESS TOKEN FOR LATER CALLS
+                        //Subsequent calls can be made without the App.net login screen.
+                        //Move this code outside of this auth process if you already have the tokens.
+                        //
+                        //Example: 
+                        //AppDotNetAuth oAuth = new AppDotNetAuth();
+                        //oAuth.access_token = Session["access_token"];
+                        //Then make the following App.net call.
+
+                        ////SAMPLE App.net API CALL
+                        string url = AppDotNetAuth.USER.Replace("[user_id]", "me");
+                        
+                        AppDotNetUser user = Json.Deserialise<AppDotNetUserWrapper>(AuthUtilities.WebRequest(AuthUtilities.Method.GET, url, String.Empty, oAuth.AuthHeader())).data;
+
+                        if (user.id.Length > 0)
+                        {
+                            UserData userData = new UserData();
+                            userData.id = user.id;
+                            userData.username = user.username;
+                            userData.name = user.name;
+                            userData.serviceType = "appdotnet";
+                            AuthSuccess(userData);
+                        }
+
+                        //POST Test
+                        //url = AppDotNetAuth.WRITE_POST;
+                        //string json = AuthUtilities.WebRequest(AuthUtilities.Method.POST, url, "text=" + HttpUtility.UrlEncode("Hello @swhitley - Testing the .NET oAuth API"), oAuth.AuthHeader());
+
+                        Response.Clear();
+                        Response.Write("<script>window.opener.location.reload();window.close();</script>");
+
+                    }
+                }
+            }
+            #endregion
+
 
 
             //TODO: Add Error Handling

@@ -58,7 +58,9 @@
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Auth\Auth.aspx" />
+    <Content Include="Images\appdotnet-connect.png" />
     <Content Include="Images\google-signin.png" />
+    <Content Include="Images\icon_appdotnet.png" />
     <Content Include="Images\icon_facebook.png" />
     <Content Include="Images\icon_gplus.png" />
     <Content Include="Images\icon_linkedin.png" />
@@ -69,9 +71,18 @@
     <Content Include="Scripts\jquery-1.4.1-vsdoc.js" />
     <Content Include="Scripts\jquery-1.4.1.js" />
     <Content Include="Scripts\jquery-1.4.1.min.js" />
+    <Content Include="NoGit\Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <None Include="Web.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="NoGit\Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="NoGit\Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="About.aspx.cs">
@@ -109,6 +120,10 @@
     <Compile Include="Account\Register.aspx.designer.cs">
       <DependentUpon>Register.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Auth\AppDotNetAuth.cs" />
+    <Compile Include="Auth\AppDotNetPost.cs" />
+    <Compile Include="Auth\AppDotNetUser.cs" />
+    <Compile Include="Auth\AppDotNetWrapperMeta.cs" />
     <Compile Include="Auth\AuthUtilities.cs" />
     <Compile Include="Auth\FacebookAuth.cs" />
     <Compile Include="Auth\FacebookData.cs" />
@@ -148,11 +163,6 @@
     <Content Include="Account\Web.config" />
     <Content Include="Site.Master" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="NoGit\Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
@@ -161,7 +171,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
-          <DevelopmentServerPort>80</DevelopmentServerPort>
+          <DevelopmentServerPort>12345</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>https://localhost/AuthPack</IISUrl>
           <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
