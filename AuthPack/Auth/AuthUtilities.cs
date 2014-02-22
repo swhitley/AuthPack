@@ -159,5 +159,7 @@ namespace AuthPack
         public string name;
         [DataMember]
         public string serviceType;
+        [DataMember]
+        public string imageUrl;
     }
 }

@@ -25,7 +25,7 @@ namespace AuthPack
                 Image profileImage = (Image) HeadLoginView.FindControl("profileImage");
                 if (userData.serviceType == "twitter")
                 {
-                    profileImage.ImageUrl = "http://api.twitter.com/1/users/profile_image/" + userData.username;
+                    profileImage.ImageUrl = userData.imageUrl;
                     profileImage.AlternateText = userData.name;
                     profileImage.Visible = true;
                 }

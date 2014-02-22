@@ -69,7 +69,7 @@ namespace AuthPack
                     //Then make the following Twitter call.
 
                     //SAMPLE TWITTER API CALL
-                    string url = "http://api.twitter.com/1/account/verify_credentials.json";
+                    string url = "https://api.twitter.com/1.1/account/verify_credentials.json";
                     TwitterUser user = Json.Deserialise<TwitterUser>(oAuth.oAuthWebRequest(oAuthTwitter.Method.GET, url, String.Empty));
 
                     if (user.id.Length > 0)
@@ -79,11 +79,12 @@ namespace AuthPack
                         userData.username = user.screen_name;
                         userData.name = user.name;
                         userData.serviceType = "twitter";
+                        userData.imageUrl = user.profile_image_url;
                         AuthSuccess(userData);
                     }
 
                     //POST Test
-                    //url = "http://api.twitter.com/1/statuses/update.xml";
+                    //url = "https://api.twitter.com/1.1/statuses/update.json";
                     //xml = oAuth.oAuthWebRequest(oAuthTwitter.Method.POST, url, "status=" + oAuth.UrlEncode("Hello @swhitley - Testing the .NET oAuth API"));
                     Response.Clear();
                     Response.Write("<script>window.opener.location.reload();window.close();</script>");

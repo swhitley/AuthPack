@@ -18,5 +18,7 @@ namespace AuthPack
         public string screen_name;
         [DataMember]
         public string name;
+        [DataMember]
+        public string profile_image_url;
     }
 }
